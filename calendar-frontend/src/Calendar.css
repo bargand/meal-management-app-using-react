@@ -1,0 +1,34 @@
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  margin: 10px 0;
+}
+
+.calendar-day {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: center;
+  cursor: pointer;
+}
+
+.calendar-day.has-entry {
+  background-color: #d1ffd1;
+}
+
+.entry-form {
+  margin-top: 20px;
+}
+
+.entry-form textarea {
+  width: 100%;
+  height: 60px;
+  margin: 5px 0;
+}
+
+.entry-form button {
+  padding: 5px 10px;
+}
+
+/* main code */
