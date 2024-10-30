@@ -11,7 +11,10 @@ function Calendar() {
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedDay, setSelectedDay] = useState(null);
   const [description, setDescription] = useState("");
-  const [saveMessage, setSaveMessage] = useState(""); // New state for save message
+  const [saveMessage, setSaveMessage] = useState("");
+
+  const today = new Date();
+  const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 
   useEffect(() => {
     generateCalendarDays();
@@ -42,10 +45,15 @@ function Calendar() {
   const handleSaveEntry = async () => {
     if (selectedDate && description) {
       await axios.post("http://localhost:5000/entry", { date: selectedDate, description });
-      setEntries({ ...entries, [selectedDate]: description });
+      
+      // Update the entries state to reflect the saved data
+      setEntries(prevEntries => ({
+        ...prevEntries,
+        [selectedDate]: description // Save the description for the selected date
+      }));
+      
       setDescription("");
 
-      // Show save message and clear it after 3 seconds
       setSaveMessage("Data is saved");
       setTimeout(() => setSaveMessage(""), 3000);
     }
@@ -83,12 +91,16 @@ function Calendar() {
       <div className="calendar">
         {daysInMonth.map((day) => {
           const dateStr = `${selectedYear}-${String(selectedMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+          const isToday = dateStr === todayStr;
+          const hasEntry = entries[dateStr] !== undefined; // Check if there's an entry for this date
+
           return (
             <div
               key={day}
               className={`calendar-day 
-                ${entries[dateStr] ? 'saved' : ''} 
-                ${selectedDay === day ? 'selected' : ''}`}
+                ${hasEntry ? 'saved' : ''} 
+                ${selectedDay === day ? 'selected' : ''} 
+                ${isToday ? 'today' : ''}`}
               onClick={() => handleDateClick(day)}
             >
               {day}
@@ -105,7 +117,6 @@ function Calendar() {
         </div>
       )}
 
-      {/* Popup notification for save message */}
       {saveMessage && (
         <div className="save-message">
           {saveMessage}
@@ -116,5 +127,3 @@ function Calendar() {
 }
 
 export default Calendar;
-
-//main code
