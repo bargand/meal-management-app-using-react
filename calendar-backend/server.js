@@ -53,4 +53,4 @@ app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
 
-//main code
+//MAIN CODE

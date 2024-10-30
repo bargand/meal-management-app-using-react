@@ -13,6 +13,9 @@ function Calendar() {
   const [description, setDescription] = useState("");
   const [saveMessage, setSaveMessage] = useState("");
 
+  // Monthly balance
+  const monthlyBalance = 1300;
+
   const today = new Date();
   const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 
@@ -69,6 +72,23 @@ function Calendar() {
     setSelectedDay(null);
   };
 
+  // Calculate daily cost based on the number of days in the selected month
+  const calculateDailyCost = () => {
+    const daysInThisMonth = new Date(selectedYear, selectedMonth + 1, 0).getDate();
+    return monthlyBalance / daysInThisMonth;
+  };
+
+  // Calculate remaining balance for the selected month
+  const calculateRemainingBalance = () => {
+    const entriesForMonth = Object.keys(entries).filter(date => {
+      const [year, month] = date.split('-');
+      return parseInt(year) === selectedYear && parseInt(month) === selectedMonth + 1;
+    });
+    const daysEaten = entriesForMonth.length;
+    const amountDeducted = daysEaten * calculateDailyCost();
+    return monthlyBalance - amountDeducted;
+  };
+
   return (
     <div className="calendar-container">
       <h2>{new Date(selectedYear, selectedMonth).toLocaleString('default', { month: 'long', year: 'numeric' })}</h2>
@@ -88,11 +108,17 @@ function Calendar() {
         </label>
       </div>
 
+      <div className="balance-info">
+        <p><strong>Starting Balance:</strong> ₹{monthlyBalance}</p>
+        <p><strong>Daily Cost:</strong> ₹{calculateDailyCost().toFixed(2)}</p>
+        <p><strong>Remaining Balance:</strong> ₹{calculateRemainingBalance().toFixed(2)}</p>
+      </div>
+
       <div className="calendar">
         {daysInMonth.map((day) => {
           const dateStr = `${selectedYear}-${String(selectedMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
           const isToday = dateStr === todayStr;
-          const hasEntry = entries[dateStr] !== undefined; // Check if there's an entry for this date
+          const hasEntry = entries[dateStr] !== undefined;
 
           return (
             <div
