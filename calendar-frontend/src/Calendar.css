@@ -1,3 +1,226 @@
+/* Overall container styling */
+.calendar-container {
+  max-width: 400px;
+  margin: 20px auto;
+  padding: 20px;
+  text-align: center;
+  font-family: Arial, sans-serif;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+}
+
+/* Month and Year Selector Styling */
+.selector-container {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.selector-container label {
+  font-weight: bold;
+}
+
+.selector-container select,
+.selector-container input {
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+/* Calendar grid styling */
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  margin: 10px 0;
+}
+
+/* Individual calendar days */
+.calendar-day {
+  padding: 15px 0;
+  border: 1px solid #ddd;
+  text-align: center;
+  cursor: pointer;
+  background-color: #fff;
+  transition: background-color 0.3s, color 0.3s;
+  font-size: 0.9rem;
+  border-radius: 5px;
+}
+
+.calendar-day:hover {
+  background-color: #e0f7fa;
+  color: #00796b;
+}
+
+.calendar-day.has-entry {
+  background-color: #c8e6c9;
+  color: #2e7d32;
+  font-weight: bold;
+}
+
+/* Entry form styling */
+.entry-form {
+  margin-top: 20px;
+}
+
+.entry-form textarea {
+  width: 100%;
+  height: 80px;
+  margin: 10px 0;
+  padding: 10px;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  resize: none;
+}
+
+.entry-form button {
+  padding: 8px 15px;
+  font-size: 1rem;
+  background-color: #00796b;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.entry-form button:hover {
+  background-color: #004d40;
+}
+
+/* Overall container styling */
+.calendar-container {
+  max-width: 400px;
+  margin: 20px auto;
+  padding: 20px;
+  text-align: center;
+  font-family: Arial, sans-serif;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+}
+
+/* Month and Year Selector Styling */
+.selector-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.selector-container label {
+  font-weight: bold;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+/* Styling for the dropdowns and input fields */
+.selector-container select,
+.selector-container input[type="number"] {
+  padding: 8px 12px;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: #f5f5f5;
+  color: #333;
+  outline: none;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.selector-container select:focus,
+.selector-container input[type="number"]:focus {
+  border-color: #00796b;
+  background-color: #e0f7fa;
+}
+
+.selector-container select:hover,
+.selector-container input[type="number"]:hover {
+  background-color: #eaf4f4;
+  cursor: pointer;
+}
+
+/* Align labels and fields in a single row */
+.selector-container label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+
+
+
+.calendar-day.selected {
+  background-color: #e0f7fa;
+  border: 2px solid #00796b;
+  color: #00796b;
+  font-weight: bold;
+}
+
+.calendar-day.selected:hover {
+  background-color: #b2ebf2;
+}
+
+
+.calendar-day {
+  padding: 15px 0;
+  border: 1px solid #ddd;
+  text-align: center;
+  cursor: pointer;
+  background-color: #fff;
+  transition: background-color 0.3s, color 0.3s;
+  font-size: 0.9rem;
+  border-radius: 5px;
+}
+
+.calendar-day:hover {
+  background-color: #e0f7fa;
+  color: #00796b;
+}
+
+/* Styling for selected date */
+.calendar-day.selected {
+  background-color: #e0f7fa;
+  border: 2px solid #00796b;
+  color: #00796b;
+  font-weight: bold;
+}
+
+/* Styling for saved dates (green) */
+.calendar-day.saved {
+  background-color: #c8e6c9;
+  color: #2e7d32;
+  font-weight: bold;
+}
+
+.calendar-day.selected:hover {
+  background-color: #b2ebf2;
+}
+
+
+/* Popup notification for save message */
+.save-message {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 10px 20px;
+  background-color: #4caf50; /* Green background */
+  color: #fff;
+  border-radius: 5px;
+  font-weight: bold;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: opacity 0.3s ease;
+  z-index: 1000;
+}
+
+/* Calendar styling */
+.calendar-container { max-width: 600px; margin: 0 auto; }
+
 .calendar {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -6,29 +229,34 @@
 }
 
 .calendar-day {
-  width: 100%;
   padding: 10px;
   border: 1px solid #ddd;
   text-align: center;
   cursor: pointer;
 }
 
-.calendar-day.has-entry {
-  background-color: #d1ffd1;
+/* New styles for Yes/No selection */
+.options button {
+  padding: 8px 15px;
+  margin: 5px;
+  font-size: 1rem;
+  cursor: pointer;
 }
 
-.entry-form {
-  margin-top: 20px;
+.options button.active {
+  font-weight: bold;
+  color: #fff;
 }
 
-.entry-form textarea {
-  width: 100%;
-  height: 60px;
-  margin: 5px 0;
+/* Green for Yes and Red for No */
+.calendar-day.green {
+  background-color: #c8e6c9;
+  color: #2e7d32;
 }
 
-.entry-form button {
-  padding: 5px 10px;
+.calendar-day.red {
+  background-color: #ffcdd2;
+  color: #b71c1c;
 }
 
 /* main code */
