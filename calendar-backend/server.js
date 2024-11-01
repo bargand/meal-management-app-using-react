@@ -14,10 +14,17 @@ mongoose.connect("mongodb://localhost:27017/calendarApp", {
   useUnifiedTopology: true,
 });
 
-// Calendar Entry Schema
+// Calendar Entry Schema with Lunch and Dinner
 const entrySchema = new mongoose.Schema({
   date: String, // Store date as a string (e.g., "2023-10-30")
-  description: String, // Note for the date
+  lunch: {
+    description: String,
+    consumed: { type: Boolean, default: false },
+  },
+  dinner: {
+    description: String,
+    consumed: { type: Boolean, default: false },
+  },
 });
 
 const Entry = mongoose.model("Entry", entrySchema);
@@ -28,20 +35,17 @@ app.get("/entries", async (req, res) => {
   res.json(entries);
 });
 
-// Route to add/update an entry
+// Route to add/update an entry with lunch and dinner data
 app.post("/entry", async (req, res) => {
-  const { date, description } = req.body;
+  const { date, lunch, dinner } = req.body;
 
-  
-
-  // Update existing entry or create new one
   const existingEntry = await Entry.findOneAndUpdate(
     { date },
-    { description },
+    { lunch, dinner },
     { new: true }
   );
   if (!existingEntry) {
-    const newEntry = await Entry.create({ date, description });
+    const newEntry = await Entry.create({ date, lunch, dinner });
     res.json(newEntry);
   } else {
     res.json(existingEntry);
@@ -53,4 +57,6 @@ app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
 
-//MAIN CODE
+
+
+//main code

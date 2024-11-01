@@ -10,7 +10,8 @@ function Calendar() {
   const [entries, setEntries] = useState({});
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedDay, setSelectedDay] = useState(null);
-  const [description, setDescription] = useState("");
+  const [lunchDescription, setLunchDescription] = useState("");
+  const [dinnerDescription, setDinnerDescription] = useState("");
   const [saveMessage, setSaveMessage] = useState("");
 
   // Monthly balance
@@ -32,7 +33,7 @@ function Calendar() {
   const fetchEntries = async () => {
     const response = await axios.get("http://localhost:5000/entries");
     const entriesMap = response.data.reduce((acc, entry) => {
-      acc[entry.date] = entry.description;
+      acc[entry.date] = entry;
       return acc;
     }, {});
     setEntries(entriesMap);
@@ -42,20 +43,34 @@ function Calendar() {
     const dateStr = `${selectedYear}-${String(selectedMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
     setSelectedDate(dateStr);
     setSelectedDay(day);
-    setDescription(entries[dateStr] || "");
+
+    // Set descriptions and consumed status based on entries
+    if (entries[dateStr]) {
+      setLunchDescription(entries[dateStr].lunch?.description || "");
+      setDinnerDescription(entries[dateStr].dinner?.description || "");
+    } else {
+      setLunchDescription("");
+      setDinnerDescription("");
+    }
   };
 
   const handleSaveEntry = async () => {
-    if (selectedDate && description) {
-      await axios.post("http://localhost:5000/entry", { date: selectedDate, description });
-      
+    if (selectedDate) {
+      const newEntry = {
+        date: selectedDate,
+        lunch: { description: lunchDescription, consumed: !!lunchDescription },
+        dinner: { description: dinnerDescription, consumed: !!dinnerDescription },
+      };
+      await axios.post("http://localhost:5000/entry", newEntry);
+
       // Update the entries state to reflect the saved data
       setEntries(prevEntries => ({
         ...prevEntries,
-        [selectedDate]: description // Save the description for the selected date
+        [selectedDate]: newEntry,
       }));
       
-      setDescription("");
+      setLunchDescription("");
+      setDinnerDescription("");
 
       setSaveMessage("Data is saved");
       setTimeout(() => setSaveMessage(""), 3000);
@@ -72,20 +87,25 @@ function Calendar() {
     setSelectedDay(null);
   };
 
-  // Calculate daily cost based on the number of days in the selected month
+  // Calculate daily cost for lunch and dinner based on days in month
   const calculateDailyCost = () => {
     const daysInThisMonth = new Date(selectedYear, selectedMonth + 1, 0).getDate();
     return monthlyBalance / daysInThisMonth;
   };
 
-  // Calculate remaining balance for the selected month
   const calculateRemainingBalance = () => {
-    const entriesForMonth = Object.keys(entries).filter(date => {
-      const [year, month] = date.split('-');
+    const entriesForMonth = Object.values(entries).filter(entry => {
+      const [year, month] = entry.date.split('-');
       return parseInt(year) === selectedYear && parseInt(month) === selectedMonth + 1;
     });
-    const daysEaten = entriesForMonth.length;
-    const amountDeducted = daysEaten * calculateDailyCost();
+
+    const dailyCost = calculateDailyCost() / 1; // Assuming lunch and dinner each cost half of daily cost
+    const amountDeducted = entriesForMonth.reduce((total, entry) => {
+      const lunchCost = entry.lunch.consumed ? dailyCost : 0;
+      const dinnerCost = entry.dinner.consumed ? dailyCost : 0;
+      return total + lunchCost + dinnerCost;
+    }, 0);
+
     return monthlyBalance - amountDeducted;
   };
 
@@ -118,7 +138,7 @@ function Calendar() {
         {daysInMonth.map((day) => {
           const dateStr = `${selectedYear}-${String(selectedMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
           const isToday = dateStr === todayStr;
-          const hasEntry = entries[dateStr] !== undefined;
+          const hasEntry = entries[dateStr] && (entries[dateStr].lunch.consumed || entries[dateStr].dinner.consumed);
 
           return (
             <div
@@ -138,14 +158,25 @@ function Calendar() {
       {selectedDate && (
         <div className="entry-form">
           <h3>Entry for {selectedDate}</h3>
-          <textarea value={description} onChange={(e) => setDescription(e.target.value)} />
-          <button onClick={handleSaveEntry}>Save Entry</button>
-        </div>
-      )}
 
-      {saveMessage && (
-        <div className="save-message">
-          {saveMessage}
+          <label>Lunch:</label>
+          <input
+            type="text"
+            value={lunchDescription}
+            onChange={(e) => setLunchDescription(e.target.value)}
+            placeholder="Describe lunch"
+          />
+
+          <label>Dinner:</label>
+          <input
+            type="text"
+            value={dinnerDescription}
+            onChange={(e) => setDinnerDescription(e.target.value)}
+            placeholder="Describe dinner"
+          />
+
+          <button onClick={handleSaveEntry}>Save Entry</button>
+          {saveMessage && <p>{saveMessage}</p>}
         </div>
       )}
     </div>
@@ -153,3 +184,7 @@ function Calendar() {
 }
 
 export default Calendar;
+
+
+
+//main code
