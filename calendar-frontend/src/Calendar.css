@@ -134,3 +134,111 @@
 }
 
 /* MAIN CODE */
+
+
+
+/* Entry form styling */
+.entry-form {
+  margin-top: 20px;
+  text-align: left;
+}
+
+/* Label styling for lunch and dinner fields */
+.entry-form label {
+  font-weight: bold;
+  color: #333;
+  display: block;
+  margin-top: 10px;
+}
+
+/* Input fields for lunch and dinner */
+.entry-form input[type="text"] {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+}
+
+.entry-form input[type="text"]:focus {
+  border-color: #00796b;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 121, 107, 0.3);
+}
+
+/* Save button styling */
+.entry-form button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  font-size: 1rem;
+  background-color: #00796b;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 15px;
+  transition: background-color 0.3s;
+}
+
+.entry-form button:hover {
+  background-color: #004d40;
+}
+
+/* Balance info styling */
+.balance-info {
+  background-color: #f1f8e9;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  color: #33691e;
+  font-size: 1rem;
+  text-align: left;
+}
+
+
+
+/* Popup notification for save message */
+.save-message {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px;
+  background-color: #4caf50;
+  color: #fff;
+  border-radius: 8px;
+  font-weight: bold;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  opacity: 1;
+  animation: fadeOut 3s ease-in-out forwards;
+  z-index: 1000;
+}
+
+/* Icon styling for success message */
+.save-message .icon {
+  font-size: 1.2rem;
+}
+
+/* Animation for fade-out effect */
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  80% {
+    opacity: 0.9;
+    transform: translateY(-10px);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}
+
+
